@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normal Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3a8a, #111827);
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculator {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .display {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: right;
+            color: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .expression {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            min-height: 1.2rem;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+
+        .result {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #e5e7eb;
+            transition: transform 0.2s ease;
+        }
+
+        .result.animate {
+            transform: scale(1.05);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e5e7eb;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            min-height: 60px;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .operator {
+            color: #3b82f6;
+        }
+
+        .equals {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .equals:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
+        }
+
+        .clear {
+            color: #ef4444;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.2s ease;
+        }
+
+        .menu-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        .menu-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #e5e7eb;
+        }
+
+        .menu {
+            position: fixed;
+            top: 50px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+        }
+
+        .menu.active {
+            display: flex;
+        }
+
+        .menu a {
+            padding: 10px 20px;
+            color: #e5e7eb;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background 0.2s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        @media (max-width: 400px) {
+            .calculator {
+                padding: 15px;
+            }
+
+            .display {
+                padding: 10px;
+            }
+
+            .expression {
+                font-size: 1rem;
+            }
+
+            .result {
+                font-size: 2rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 12px;
+                min-height: 48px;
+            }
+
+            .menu-button {
+                top: 10px;
+                right: 10px;
+                padding: 8px;
+            }
+
+            .menu {
+                top: 40px;
+                right: 10px;
+            }
+
+            .menu a {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Button -->
+    <button class="menu-button" onclick="toggleMenu(event)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+        </svg>
+    </button>
+
+    <!-- Menu Dropdown -->
+    <div class="menu" id="menu">
+        <a href="age.html" onclick="toggleMenu(event)">Age Calculator</a>
+        <a href="percentage.html" onclick="toggleMenu(event)">Percentage Calculator</a>
+        <a href="interest.html" onclick="toggleMenu(event)">Interest Calculator</a>
+        <a href="Ovulation.html" onclick="toggleMenu(event)">Ovulation Calculator</a>
+    </div>
+
+    <!-- Calculator -->
+    <div class="calculator">
+        <div class="display">
+            <div class="expression" id="expression"></div>
+            <div class="result" id="result">0</div>
+        </div>
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">AC</button>
+            <button onclick="backspace()">⌫</button>
+            <button class="operator" onclick="appendToExpression('÷')">÷</button>
+            <button class="operator" onclick="appendToExpression('×')">×</button>
+            <button onclick="appendToExpression('7')">7</button>
+            <button onclick="appendToExpression('8')">8</button>
+            <button onclick="appendToExpression('9')">9</button>
+            <button class="operator" onclick="appendToExpression('-')">-</button>
+            <button onclick="appendToExpression('4')">4</button>
+            <button onclick="appendToExpression('5')">5</button>
+            <button onclick="appendToExpression('6')">6</button>
+            <button class="operator" onclick="appendToExpression('+')">+</button>
+            <button onclick="appendToExpression('1')">1</button>
+            <button onclick="appendToExpression('2')">2</button>
+            <button onclick="appendToExpression('3')">3</button>
+            <button class="equals" onclick="calculate()">=</button>
+            <button onclick="appendToExpression('0')" style="grid-column: span 2;">0</button>
+            <button onclick="appendToExpression('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        let expression = '';
+        let lastResult = '0';
+        const expressionDisplay = document.getElementById('expression');
+        const resultDisplay = document.getElementById('result');
+        const menu = document.getElementById('menu');
+
+        function toggleMenu(event) {
+            event.stopPropagation();
+            menu.classList.toggle('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!menu.contains(event.target) && !event.target.closest('.menu-button')) {
+                menu.classList.remove('active');
+            }
+        });
+
+        function appendToExpression(value) {
+            if (value === '×' || value === '÷' || value === '+' || value === '-') {
+                if (expression && /[+\-×÷]$/.test(expression)) {
+                    expression = expression.slice(0, -1);
+                }
+            } else if (value === '.') {
+                const lastNum = expression.split(/[+\-×÷]/).pop();
+                if (lastNum.includes('.')) return;
+            }
+
+            expression += value;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            expressionDisplay.textContent = expression || '';
+            resultDisplay.classList.add('animate');
+
+            if (expression && /[+\-×÷]$/.test(expression)) {
+                resultDisplay.textContent = lastResult;
+                return;
+            }
+
+            try {
+                let evalExpression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+                if (evalExpression) {
+                    const result = eval(evalExpression);
+                    if (!Number.isFinite(result)) throw new Error();
+                    lastResult = result.toFixed(2).replace(/\.00$/, '');
+                    resultDisplay.textContent = lastResult;
+                } else {
+                    resultDisplay.textContent = '0';
+                    lastResult = '0';
+                }
+            } catch {
+                resultDisplay.textContent = 'Error';
+                lastResult = '0';
+            }
+        }
+
+        function calculate() {
+            try {
+                let evalExpression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+                const result = eval(evalExpression);
+                if (!Number.isFinite(result)) throw new Error();
+                expression = result.toFixed(2).replace(/\.00$/, '');
+                lastResult = expression;
+                updateDisplay();
+            } catch {
+                expression = '';
+                resultDisplay.textContent = 'Error';
+                lastResult = '0';
+                expressionDisplay.textContent = '';
+            }
+        }
+
+        function clearDisplay() {
+            expression = '';
+            lastResult = '0';
+            updateDisplay();
+        }
+
+        function backspace() {
+            expression = expression.slice(0, -1);
+            updateDisplay();
+        }
+
+        // Add keyboard support
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+
+            // Numbers and decimal
+            if (/^[0-9]$/.test(key)) {
+                appendToExpression(key);
+            } else if (key === '.') {
+                appendToExpression('.');
+            }
+            // Operators
+            else if (key === '+') {
+                appendToExpression('+');
+            } else if (key === '-') {
+                appendToExpression('-');
+            } else if (key === '*') {
+                appendToExpression('×');
+            } else if (key === '/') {
+                appendToExpression('÷');
+            }
+            // Equals (Enter key)
+            else if (key === 'Enter') {
+                calculate();
+            }
+            // Clear (Escape key)
+            else if (key === 'Escape') {
+                clearDisplay();
+            }
+            // Backspace
+            else if (key === 'Backspace') {
+                backspace();
+            }
+
+            // Prevent default for keys we handle (e.g., to avoid browser shortcuts)
+            if (['+', '-', '*', '/', 'Enter', 'Escape', 'Backspace', '.'].includes(key) || /^[0-9]$/.test(key)) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

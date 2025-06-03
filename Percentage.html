@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #c084fc, #e9d5ff);
+            padding: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: grid;
+            gap: 10px;
+            padding: 15px;
+            height: calc(100vh - 20px);
+            align-content: start;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: transform 0.3s, height 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d1b4e;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .card-title:hover {
+            color: #7c3aed;
+        }
+
+        .card-content {
+            display: none;
+            padding: 10px;
+        }
+
+        .card.active .card-content {
+            display: block;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            color: #2d1b4e;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 90px;
+        }
+
+        input::placeholder {
+            color: #7c6b9e;
+        }
+
+        .percent-input {
+            padding-right: 25px;
+        }
+
+        .percent-symbol {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2d1b4e;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #9ca3af, #d4d4d8);
+            color: #2d1b4e;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .result {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #2d1b4e;
+            min-height: 32px;
+        }
+
+        @media (max-width: 400px) {
+            .card {
+                padding: 10px;
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            input, button {
+                font-size: 0.85rem;
+            }
+        }
+        .button-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px; /* Added margin for spacing */
+}
+
+button, .home-btn { /* Apply button styles to home-btn as well */
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    text-align: center; /* Center text for the home button */
+    text-decoration: none; /* Remove underline for anchor tag */
+    display: inline-block; /* Make it behave like a block for padding/sizing */
+    color: white; /* Default color for home button */
+}
+/* ... existing button styles ... */
+
+.home-btn { /* Specific style for the home button */
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9); /* Blue gradient for home */
+    color: white;
+    flex: none; /* Don't let it flex grow if you want it to be a specific size */
+    width: fit-content; /* Adjust width to content */
+    padding: 8px 15px; /* Adjust padding */
+    margin-bottom: 10px; /* Space below the home button */
+}
+
+button:hover, .home-btn:hover { /* Apply hover to home-btn */
+    transform: scale(1.03);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+button:active, .home-btn:active { /* Apply active to home-btn */
+    transform: scale(0.97);
+}
+/* ... media query adjustments for home-btn ... */
+@media (max-width: 400px) {
+    /* ... existing styles ... */
+    input, select, button, .home-btn { /* Apply responsive font size to home-btn */
+        font-size: 0.85rem;
+    }
+}
+    </style>
+</head>
+<body>
+   
+    
+
+    </div>
+    <div class="container">
+        <a href="index.html" class="home-btn">Home</a>
+        <!-- Calculator 1: What is A% of B? -->
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">Calculate Now: What is [A]% of [B]?</div>
+            <div class="card-content">
+                <div class="input-group">
+                    <div style="position: relative; flex: 1;">
+                        <input type="number" id="percent1" class="percent-input" placeholder="A (e.g., 20)" step="any">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                    <input type="number" id="value1" placeholder="B (e.g., 150)" step="any">
+                </div>
+                <div class="button-group">
+                    <button class="calculate-btn" onclick="calculatePercentOf(event)">Calculate</button>
+                    <button class="clear-btn" onclick="clearInputs(event, 'percent1', 'value1', 'result1')">Clear</button>
+                </div>
+                <div class="result" id="result1"></div>
+            </div>
+        </div>
+
+        <!-- Calculator 2: What percent is A of B? -->
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">Calculate Now: What percent is [A] of [B]?</div>
+            <div class="card-content">
+                <div class="input-group">
+                    <input type="number" id="part2" placeholder="A (e.g., 30)" step="any">
+                    <input type="number" id="whole2" placeholder="B (e.g., 120)" step="any">
+                </div>
+                <div class="button-group">
+                    <button class="calculate-btn" onclick="calculatePercentIs(event)">Calculate</button>
+                    <button class="clear-btn" onclick="clearInputs(event, 'part2', 'whole2', 'result2')">Clear</button>
+                </div>
+                <div class="result" id="result2"></div>
+            </div>
+        </div>
+
+        <!-- Calculator 3: Percent increase/decrease from A to B -->
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">Calculate Now: Percent increase/decrease from [A] to [B]</div>
+            <div class="card-content">
+                <div class="input-group">
+                    <input type="number" id="initial3" placeholder="A (e.g., 80)" step="any">
+                    <input type="number" id="final3" placeholder="B (e.g., 100)" step="any">
+                </div>
+                <div class="button-group">
+                    <button class="calculate-btn" onclick="calculatePercentChange(event)">Calculate</button>
+                    <button class="clear-btn" onclick="clearInputs(event, 'initial3', 'final3', 'result3')">Clear</button>
+                </div>
+                <div class="result" id="result3"></div>
+            </div>
+        </div>
+
+        <!-- Calculator 4: A is B% of what number? -->
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">Calculate Now: [A] is [B]% of what number?</div>
+            <div class="card-content">
+                <div class="input-group">
+                    <input type="number" id="part4" placeholder="A (e.g., 30)" step="any">
+                    <div style="position: relative; flex: 1;">
+                        <input type="number" id="percent4" class="percent-input" placeholder="B (e.g., 20)" step="any">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="calculate-btn" onclick="calculatePercentOfWhat(event)">Calculate</button>
+                    <button class="clear-btn" onclick="clearInputs(event, 'part4', 'percent4', 'result4')">Clear</button>
+                </div>
+                <div class="result" id="result4"></div>
+            </div>
+        </div>
+
+        <!-- Calculator 5: What is A increased/decreased by B%? -->
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-title">Calculate Now: What is [A] increased/decreased by [B]%?</div>
+            <div class="card-content">
+                <div class="input-group">
+                    <input type="number" id="value5" placeholder="A (e.g., 100)" step="any">
+                    <div style="position: relative; flex: 1;">
+                        <input type="number" id="percent5" class="percent-input" placeholder="B (e.g., 20)" step="any">
+                        <span class="percent-symbol">%</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="calculate-btn" onclick="calculatePercentAdjust(event)">Calculate</button>
+                    <button class="clear-btn" onclick="clearInputs(event, 'value5', 'percent5', 'result5')">Clear</button>
+                </div>
+                <div class="result" id="result5"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                }
+            });
+            card.classList.toggle('active');
+            event.stopPropagation();
+        }
+
+        function calculatePercentOf(event) {
+            event.stopPropagation();
+            const percent = parseFloat(document.getElementById('percent1').value);
+            const value = parseFloat(document.getElementById('value1').value);
+            const resultDiv = document.getElementById('result1');
+
+            if (isNaN(percent) || isNaN(value)) {
+                resultDiv.textContent = 'Please enter valid numbers';
+                return;
+            }
+
+            const result = (percent / 100) * value;
+            resultDiv.textContent = `${percent}% of ${value} is ${result.toFixed(2)}`;
+        }
+
+        function calculatePercentIs(event) {
+            event.stopPropagation();
+            const part = parseFloat(document.getElementById('part2').value);
+            const whole = parseFloat(document.getElementById('whole2').value);
+            const resultDiv = document.getElementById('result2');
+
+            if (isNaN(part) || isNaN(whole) || whole === 0) {
+                resultDiv.textContent = 'Please enter valid numbers (B cannot be 0)';
+                return;
+            }
+
+            const result = (part / whole) * 100;
+            resultDiv.textContent = `${part} is ${result.toFixed(2)}% of ${whole}`;
+        }
+
+        function calculatePercentChange(event) {
+            event.stopPropagation();
+            const initial = parseFloat(document.getElementById('initial3').value);
+            const final = parseFloat(document.getElementById('final3').value);
+            const resultDiv = document.getElementById('result3');
+
+            if (isNaN(initial) || isNaN(final) || initial === 0) {
+                resultDiv.textContent = 'Please enter valid numbers (A cannot be 0)';
+                return;
+            }
+
+            const change = ((final - initial) / initial) * 100;
+            const direction = change >= 0 ? 'increase' : 'decrease';
+            resultDiv.textContent = `${Math.abs(change).toFixed(2)}% ${direction} from ${initial} to ${final}`;
+        }
+
+        function calculatePercentOfWhat(event) {
+            event.stopPropagation();
+            const part = parseFloat(document.getElementById('part4').value);
+            const percent = parseFloat(document.getElementById('percent4').value);
+            const resultDiv = document.getElementById('result4');
+
+            if (isNaN(part) || isNaN(percent) || percent === 0) {
+                resultDiv.textContent = 'Please enter valid numbers (B cannot be 0)';
+                return;
+            }
+
+            const result = (part / (percent / 100));
+            resultDiv.textContent = `${part} is ${percent}% of ${result.toFixed(2)}`;
+        }
+
+        function calculatePercentAdjust(event) {
+            event.stopPropagation();
+            const value = parseFloat(document.getElementById('value5').value);
+            const percent = parseFloat(document.getElementById('percent5').value);
+            const resultDiv = document.getElementById('result5');
+
+            if (isNaN(value) || isNaN(percent)) {
+                resultDiv.textContent = 'Please enter valid numbers';
+                return;
+            }
+
+            const result = value * (1 + percent / 100);
+            const direction = percent >= 0 ? 'increased' : 'decreased';
+            resultDiv.textContent = `${value} ${direction} by ${Math.abs(percent)}% is ${result.toFixed(2)}`;
+        }
+
+        function clearInputs(event, input1Id, input2Id, resultId) {
+            event.stopPropagation();
+            document.getElementById(input1Id).value = '';
+            document.getElementById(input2Id).value = '';
+            document.getElementById(resultId).textContent = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age and Day with Tithi Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #c084fc, #e9d5ff);
+            padding: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: grid;
+            gap: 10px;
+            padding: 15px;
+            height: calc(100vh - 20px);
+            align-content: start;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, height 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d1b4e;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .card-title:hover {
+            color: #7c3aed;
+        }
+
+        .card-content {
+            display: none;
+            padding: 10px;
+        }
+
+        .card.active .card-content {
+            display: block;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            color: #2d1b4e;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 80px;
+        }
+
+        input::placeholder {
+            color: #7c6b9e;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px; /* Added margin-bottom for spacing */
+        }
+
+        button, .home-btn { /* Apply button styles to home-btn as well */
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            text-align: center; /* Center text for the home button */
+            text-decoration: none; /* Remove underline for anchor tag */
+            display: inline-block; /* Make it behave like a block for padding/sizing */
+            color: white; /* Default color for home button */
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #9ca3af, #d4d4d8);
+            color: #2d1b4e;
+        }
+        
+        .home-btn { /* Specific style for the home button */
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9); /* Blue gradient for home */
+            color: white;
+            flex: none; /* Don't let it flex grow if you want it to be a specific size */
+            width: fit-content; /* Adjust width to content */
+            padding: 8px 15px; /* Adjust padding */
+            margin-bottom: 10px; /* Space below the home button */
+        }
+
+
+        button:hover, .home-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        button:active, .home-btn:active {
+            transform: scale(0.97);
+        }
+
+        .result {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #2d1b4e;
+            min-height: 48px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 400px) {
+            .card {
+                padding: 10px;
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            input, button, .home-btn { /* Apply responsive font size to home-btn */
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="home-btn">Home</a>
+
+        <div class="card">
+            <div class="card-title" onclick="toggleCard(this.parentElement)"> Age from Birth Date</div>
+            <div class="card-content">
+                <div class="input-group">
+                    <input type="number" id="day1" placeholder="Day" min="1" max="31" step="1" onfocus="stopPropagation(event)">
+                    <input type="number" id="month1" placeholder="Month" min="1" max="12" step="1" onfocus="stopPropagation(event)">
+                    <input type="number" id="year1" placeholder="Year" min="1900" max="2025" step="1" onfocus="stopPropagation(event)">
+                </div>
+                <div class="button-group">
+                    <button class="calculate-btn" onclick="calculateAge(event)">Calculate</button>
+                    <button class="clear-btn" onclick="clearInputs(event, ['day1', 'month1', 'year1'], 'result1')">Clear</button>
+                </div>
+                <div class="result" id="result1"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" onclick="toggleCard(this.parentElement)"> Day and Tithi</div>
+            <div class="card-content">
+                <div class="input-group">
+                    <input type="number" id="day2" placeholder="Day " min="1" max="31" step="1" onfocus="stopPropagation(event)">
+                    <input type="number" id="month2" placeholder="Month" min="1" max="12" step="1" onfocus="stopPropagation(event)">
+                    <input type="number" id="year2" placeholder="Year" min="1900" step="1" onfocus="stopPropagation(event)">
+                </div>
+                <div class="button-group">
+                    <button class="calculate-btn" onclick="calculateDayAndTithi(event)">Calculate</button>
+                    <button class="clear-btn" onclick="clearInputs(event, ['day2', 'month2', 'year2'], 'result2')">Clear</button>
+                </div>
+                <div class="result" id="result2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                }
+            });
+            card.classList.toggle('active');
+        }
+
+        function stopPropagation(event) {
+            event.stopPropagation();
+        }
+
+        function isValidDate(day, month, year) {
+            const date = new Date(year, month - 1, day);
+            return date.getDate() === parseInt(day) && date.getMonth() === month - 1 && date.getFullYear() === parseInt(year);
+        }
+
+        function calculateAge(event) {
+            event.stopPropagation();
+            const day = parseInt(document.getElementById('day1').value);
+            const month = parseInt(document.getElementById('month1').value);
+            const year = parseInt(document.getElementById('year1').value);
+            const resultDiv = document.getElementById('result1');
+
+            if (!day || !month || !year || !isValidDate(day, month, year)) {
+                resultDiv.textContent = 'Please enter a valid date';
+                return;
+            }
+
+            const birthDate = new Date(year, month - 1, day);
+            const today = new Date(); // Dynamic current date
+
+            if (birthDate > today) {
+                resultDiv.textContent = 'Birth date cannot be in the future';
+                return;
+            }
+
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            resultDiv.textContent = `Age: ${years} years, ${months} months, ${days} days`;
+        }
+
+        function calculateDayAndTithi(event) {
+            event.stopPropagation();
+            const day = parseInt(document.getElementById('day2').value);
+            const month = parseInt(document.getElementById('month2').value);
+            const year = parseInt(document.getElementById('year2').value);
+            const resultDiv = document.getElementById('result2');
+
+            if (!day || !month || !year || !isValidDate(day, month, year)) {
+                resultDiv.textContent = 'Please enter a valid date';
+                return;
+            }
+
+            const date = new Date(year, month - 1, day);
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayName = daysOfWeek[date.getDay()];
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Tithi calculation
+            const referenceNewMoon = new Date('2000-01-06'); // Known New Moon date
+            const daysSinceReference = (date - referenceNewMoon) / (1000 * 60 * 60 * 24);
+            const lunarCycleDays = 29.530588; // Average synodic month
+            const lunarDay = ((daysSinceReference % lunarCycleDays) + lunarCycleDays) % lunarCycleDays;
+            const tithiIndex = Math.floor((lunarDay / lunarCycleDays) * 30) + 1;
+
+            const tithiNames = [
+                'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
+                'Shashti', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
+                'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Purnima',
+                'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
+                'Shashti', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
+                'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Amavasya'
+            ];
+            const paksha = tithiIndex <= 15 ? 'Shukla Paksha' : 'Krishna Paksha';
+            const tithi = tithiNames[tithiIndex - 1];
+
+            resultDiv.textContent = `${formattedDate} was a ${dayName}\nTithi: ${tithi} (${paksha})`;
+        }
+
+        function clearInputs(event, inputIds, resultId) {
+            event.stopPropagation();
+            inputIds.forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById(resultId).textContent = '';
+        }
+    </script>
+</body>
+</html>
